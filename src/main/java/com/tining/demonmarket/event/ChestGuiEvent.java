@@ -4,6 +4,7 @@ import com.tining.demonmarket.Main;
 import com.tining.demonmarket.common.util.LangUtil;
 import com.tining.demonmarket.gui.AcquireListGui;
 import com.tining.demonmarket.gui.ChestGui;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.apache.commons.collections.CollectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * @author tinga
@@ -86,12 +88,14 @@ public class ChestGuiEvent implements Listener {
         if (e.getWhoClicked() instanceof Player && e.getClickedInventory() != null) {
             Player player = (Player) e.getWhoClicked();
             if (ChestGui.isChestGui(player)) {
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        ChestGui.drawPage(player);
-                    }
-                }.runTask(Main.getInstance());
+                // change to support folia
+                Bukkit.getRegionScheduler().run(Main.getInstance(), player.getLocation(), scheduledTask -> ChestGui.drawPage(player));
+//                new BukkitRunnable() {
+//                    @Override
+//                    public void run() {
+//                        ChestGui.drawPage(player);
+//                    }
+//                }.runTask(Main.getInstance());
             }
         }
     }
